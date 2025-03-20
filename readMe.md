@@ -1,0 +1,1 @@
+nama: Wira Yudha AJi Pratama; NIM: 202310370311010; Kelas: Grafkom I (kelas asal grafkom H)
