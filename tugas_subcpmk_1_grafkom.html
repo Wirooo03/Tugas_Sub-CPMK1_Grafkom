@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tugas: Sub-CPMK1 Grafkom I</title>
+    <style>
+        body {
+            text-align: center;
+        }
+        canvas {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <h2>Algoritma Bressenham</h2>
+    <canvas id="canvas" width="200" height="200"></canvas>
+
+    <script>
+        //pertama kita buat fungsi algoritma bresenham yang dapat menerima 4 argumen
+        function bresenham(x1, y1, x2, y2) {
+            let points = []; //mendeklarasikan array bernama points, array ini akan diisi dan di return ke fungsi untuk nantinya di cetak ke layar, untuk sekarang masih kososng dulu
+            let dx = Math.abs(x2 - x1); //kita buat variabel dx atau delta x, uang dimana merupakan nilai absolut dari x2 dikurangi x1 atau selisih antara x1 dan x2 (x2 dan x1 ini nilainya akan kita isi nanti, nilainya sesuai dengan yg ada pada soal)
+            let dy = Math.abs(y2 - y1); //sama seperti sebelumnya, kita buat variabel dy atau delta y, yang dimana merupakan nilai absolut dari y2 dikurangi y1
+            let sx = (x1 < x2) ? 1 : -1; //selanjutnya, kita buat variabel baru yaitu sx atau step x, ini adalah ini adalah arah pergerakan x (1 untuk ke kanan, -1 untuk ke kiri)
+            let sy = (y1 < y2) ? 1 : -1; //kita buat sy atau step y, ini adalah arah pergerakan y (1 untuk ke bawah, -1 untuk ke atas)
+            let err = dx - dy; //variabel untuk mencari nilai error (dx dikurangi dy), nilai error ini akan kita gunakan nanti untuk menentukan kapan kita harus mengubah koordinat x atau y agar garis tetap mengikuti jalurnya
+
+             //lalu karena perhitungan koordinat dilakukan secara berulang, kita buat loop untuk hitung titik-titik nya
+            while (true) {
+                points.push([x1, y1]); //line ini menambahkan titik (x1, y1) ke dalam array points, apa itu array points? 
+                //array points yaitu sekumpulan koordinat (x, y) yang akan membentuk garis dan setiap titik dihitung menggunakan algoritma bresenham
+                if (x1 === x2 && y1 === y2) break; //ngecek, apakah x1 sudah sama dengan x2 DAN y1 sudah sama dengan y2, jika iya maka perulangan berhenti, jika tidak lanjut terus
+                let e2 = 2 * err; //variabel baru (e2) ini berarti error dua kali lipat, yang merupakan nilai err dikali dua, fungsinya buat apa?
+                //untuk menentukan apakah kita harus menggeser koordinat x, y, atau keduanya dalam iterasi berikutnya
+                if (e2 > -dy) { err -= dy; x1 += sx; } //selanjutnya ngecek, apakah nilai error (e2) tadi lebih dari -dy. jika iya, maka error (err) dikurangi dy, dan x1 ditambah sx (step kanan atau kiri tadi)
+                if (e2 < dx) { err += dx; y1 += sy; } // terakhir ngecek, apakah nilai error (e2) kurang dari dx. jika iya, maka error (err) dikurangi dy, dan x1 ditambah sy (step ke atas atau kiri yang udah dijelaskan sebelumnya)
+            }
+            return points; //jika perulangan telah selesai, fungsi akan mengembalikan nilai points, dimana merupakan daftar koordinat titik-titik garis
+        }
+
+        //buat fungsi untuk menggambar garisnya ke layar
+        function drawLine() {
+            let canvas = document.getElementById("canvas");
+            let ctx = canvas.getContext("2d");
+
+            //konversi koordinat grid menjadi piksel
+            let scale = 20; //ini berarti setiap unit mewakili 20 pixsel
+            let offsetX = 20; //geser dikit biar gk di luar layar
+            let offsetY = 20; //sama, tapi untuk koordinat Y
+
+            /*
+            nah disini kita gunakan fungsi yang tadi kita buat, dia menerima 4 argumen:
+            (3,2) dan (4,7) ==> sesuai pada soal
+            */
+            let points = bresenham(3, 2, 4, 7);
+
+            //gambar semua titik di canvas (ini untuk outputnya)
+            ctx.fillStyle = "blue";
+            points.forEach(([x, y]) => {
+                ctx.fillRect(x * scale + offsetX, y * scale + offsetY, 5, 5);
+            });
+        }
+
+        window.onload = drawLine;
+    </script>
+</body>
+</html>
